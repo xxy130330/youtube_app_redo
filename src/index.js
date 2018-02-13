@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import SearchBar from './components/searchBar';
 import YTSearch from 'youtube-api-search';
 import VideoList from './components/videoList';
+import VideoDetail from './components/videoDetail';
 
 const API_KEY = 'AIzaSyCQaZ4y-G1zYqgBM6DHxo46-E44FF-9eg0';
 
@@ -16,7 +17,7 @@ class App extends Component{
         super(props);
         this.state = {
             videos: [],
-
+            selectedVideo: null
         };
         YTSearch({
                 key: API_KEY,
@@ -24,7 +25,8 @@ class App extends Component{
             },
             (data) => {
                 this.setState({
-                    videos: data
+                    videos: data,
+                    selectedVideo: data[0]
                 })
             }
         );
@@ -33,7 +35,11 @@ class App extends Component{
         return(
             <div>
                 <SearchBar />
-                <VideoList videos={this.state.videos}/>
+                <VideoDetail video={this.state.selectedVideo} />
+                <VideoList
+                    videos={this.state.videos}
+                    onVideoSelect = { (selectedVideo) => this.setState({selectedVideo}) }
+                />
             </div>
         )
     }
